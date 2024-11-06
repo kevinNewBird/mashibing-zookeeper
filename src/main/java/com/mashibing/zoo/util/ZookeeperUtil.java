@@ -37,7 +37,7 @@ public final class ZookeeperUtil {
         if (StringUtils.containsIgnoreCase(os, "windows")) {
             SERVER_ADDRESS = "172.22.124.60:2281,172.22.124.60:2282,172.22.124.60:2283";
         } else { // mac
-            SERVER_ADDRESS = "";
+            SERVER_ADDRESS = "10.211.55.13:2281,10.211.55.13:2282,10.211.55.13:2283";
         }
     }
 
@@ -58,6 +58,10 @@ public final class ZookeeperUtil {
         }
 
         return zk;
+    }
+
+    public static void close() throws InterruptedException {
+        zk.close();
     }
 
 }
