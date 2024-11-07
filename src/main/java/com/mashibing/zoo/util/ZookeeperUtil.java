@@ -51,7 +51,9 @@ public final class ZookeeperUtil {
             // 控制器，用于确保zk连接成功（基于监听事件）
             CountDownLatch monitor = new CountDownLatch(1);
             // 没有使用单例！因为zookeeper是基于会话来建立客户端的，连接一旦释放，会话也就结束了
-            zk = new ZooKeeper(SERVER_ADDRESS + rootDir, SESSION_TIMEOUT, new DefaultWatcher(monitor));
+            DefaultWatcher watcher = new DefaultWatcher(monitor);
+            zk = new ZooKeeper(SERVER_ADDRESS + rootDir, SESSION_TIMEOUT, watcher);
+            watcher.setZk(zk);
             monitor.await();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
