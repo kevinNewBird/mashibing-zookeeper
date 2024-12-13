@@ -81,6 +81,8 @@ public class WatchCallback implements Watcher, AsyncCallback.StringCallback, Asy
                     cc.countDown();
                 } else {
                     System.out.println(threadName + " watch " + children.get(i - 1));
+                    // 监听前一个分布锁的删除事件（即说明该节点下线了或者已经执行结束，可再次触发强锁的逻辑）
+                    // 逻辑实现：监听器的process方法，再次getChildren
                     zk.exists("/" + children.get(i - 1), this);
                 }
             } catch (Exception e) {
