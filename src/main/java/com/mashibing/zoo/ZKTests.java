@@ -50,23 +50,31 @@ public class ZKTests {
         }
 
         // 2.增删改查
-//        testSync(zooKeeper);// 同步
-        testAsync(zooKeeper);// 异步
+        testSync(zooKeeper);// 同步
+//        testAsync(zooKeeper);// 异步
+//        testSyncByACL(zooKeeper);
 
-
-        // 阻塞
+        // 阻塞, 避免zk会话断开，从而导致临时目录删除
         System.in.read();
 
     }
 
 
     public static void testSync(ZooKeeper zooKeeper) throws InterruptedException, KeeperException {
-        SyncZKService.createSync(zooKeeper);// 阻塞创建
-        SyncZKService.getDataSync(zooKeeper);// 同步获取数据
+        String path = "/javaapisync";
+        SyncZKService.createSync(zooKeeper,path);// 阻塞创建
+        SyncZKService.getDataSync(zooKeeper,path);// 同步获取数据
     }
 
     public static void testAsync(ZooKeeper zooKeeper) throws InterruptedException, KeeperException {
         AsyncZKService.createAsync(zooKeeper);// 异步回调创建,这个如果和createSync同时使用，会导致获取数据问题
         AsyncZKService.getDataAsync(zooKeeper); // 异步获取数据
+    }
+
+    public static void testSyncByACL(ZooKeeper zooKeeper) throws InterruptedException, KeeperException {
+        zooKeeper.addAuthInfo("digest", "admin:admin-secret".getBytes());
+        String path = "/acltest";
+        SyncZKService.createSyncAcl(zooKeeper,path);// 阻塞创建
+        SyncZKService.getDataSync(zooKeeper,path);// 同步获取数据
     }
 }
