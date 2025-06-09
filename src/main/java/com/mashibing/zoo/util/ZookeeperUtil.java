@@ -5,6 +5,8 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -38,7 +40,7 @@ public final class ZookeeperUtil {
             SERVER_ADDRESS = "172.22.124.60:2281,172.22.124.60:2282,172.22.124.60:2283";
         } else { // mac
 //            SERVER_ADDRESS = "10.211.55.13:2281,10.211.55.13:2282,10.211.55.13:2283";
-            SERVER_ADDRESS = "192.168.231.150:3181";
+            SERVER_ADDRESS = "192.168.231.150:2181";
         }
     }
 

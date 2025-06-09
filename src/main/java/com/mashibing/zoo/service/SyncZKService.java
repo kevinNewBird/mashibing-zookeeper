@@ -20,7 +20,25 @@ public class SyncZKService {
 
     // 同步创建
     public static void createSync(ZooKeeper zooKeeper, String path) throws InterruptedException, KeeperException {
-        String result = zooKeeper.create("/javaapisync", "sync".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+        String result = zooKeeper.create(path, "sync".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        System.out.println(result);
+    }
+
+    // 同步创建
+    public static void createSyncAclByIp(ZooKeeper zooKeeper, String path) throws InterruptedException, KeeperException {
+        List<ACL> acls = new ArrayList<>();
+        Id id = new Id("ip", "192.168.31.185");
+        ACL acl = new ACL(ZooDefs.Perms.ALL, id);
+        acls.add(acl);
+
+        Id id2 = new Id("ip", "192.168.231.150");
+        ACL acl2 = new ACL(ZooDefs.Perms.ALL, id2);
+        acls.add(acl2);
+
+        Id id3 = new Id("ip", "127.0.0.1");
+        ACL acl3 = new ACL(ZooDefs.Perms.ALL, id3);
+        acls.add(acl3);
+        String result = zooKeeper.create(path, "sync".getBytes(), acls, CreateMode.EPHEMERAL);
         System.out.println(result);
     }
 
@@ -69,5 +87,9 @@ public class SyncZKService {
         // 会再次触发回调嘛（如果在事件中没有再次设置则不会）
         final Stat reStat = zooKeeper.setData(path, "sync new new".getBytes(), stat.getVersion());
         final Stat reStat2 = zooKeeper.setData(path, "sync new new new".getBytes(), reStat.getVersion());
+    }
+
+    public static void deleteSync(ZooKeeper zooKeeper, String path) throws InterruptedException, KeeperException {
+        zooKeeper.delete(path,-1);
     }
 }
